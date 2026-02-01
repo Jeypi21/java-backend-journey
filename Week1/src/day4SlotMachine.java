@@ -219,3 +219,5 @@ public class day4SlotMachine {
         return 0;
     }
 }
+
+//magday
