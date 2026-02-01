@@ -7,12 +7,13 @@ public class day2GuessGame {
         int choice;
         boolean isRunning = true;
         double bal = 0;
+        
+        System.out.println("---DICE GUESSING GAME---");
+        System.out.println("       ---MENU---       ");
 
         while(isRunning){
             do {
-                System.out.println("\n---DICE GUESSING GAME---");
-                System.out.println("       ---MENU---       ");
-                System.out.println("1. PLAY");
+                System.out.println("\n1. PLAY");
                 System.out.println("2. TOP-UP");
                 System.out.println("3. WITHDRAW");
                 System.out.println("4. BALANCE");
@@ -59,9 +60,10 @@ public class day2GuessGame {
         int guess;
         int roll;
         int oddEven;
-        int again;
+        String again;
         boolean playing = true;
 
+        System.out.println("\n-----------------------------------------------------------------");
         System.out.println("                   ---MECHANICS OF THE GAME---                   ");
         System.out.println("*Place your bet and guess the number of the dice");
         System.out.println("**Correct guess of the number will result to 3x bet");
@@ -127,17 +129,17 @@ public class day2GuessGame {
             System.out.printf("\nYour balance is now P%.2f\n", bal);
 
             do{
-                System.out.print("\nDo you still want to play the game(1-yes/2-no)? ");
-                again = scanner.nextInt();
+                System.out.print("\nDo you still want to play the game(yes/no)? ");
+                again = scanner.nextLine().toLowerCase();
 
-                if (again == 1){
+                if (again.equals("yes")){
                     continue;
-                } else if (again == 2){
+                } else if (again.equals("no")){
                     playing = false;
                 } else {
                     System.out.println("Invalid Input. Choose from 1 & 2 only.");
                 }
-            } while(again != 1 && again != 2);
+            } while(!again.equals("yes") && !again.equals("no"));
         }
 
         return bal;
