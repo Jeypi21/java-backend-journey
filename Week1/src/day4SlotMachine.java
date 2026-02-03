@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class day4SlotMachine {
     static Scanner input = new Scanner(System.in);
-
+    
     public static void main(String[] args){
         int menuChoice;
         boolean isRunning = true;
@@ -114,22 +114,6 @@ public class day4SlotMachine {
         return bal;
     }
 
-    static double topUp(){
-        double amount;
-
-        do{
-            System.out.print("\nEnter amount you want to top-up: ");
-            amount = input.nextDouble();
-            input.nextLine();
-
-            if (amount <= 0){
-                System.out.println("You cannot top-up less than P0");
-            }
-        } while (amount <= 0);
-
-        return amount;
-    }
-
     static double withdraw(double bal){
         double amount;
 
@@ -151,6 +135,22 @@ public class day4SlotMachine {
                 }
             } while (amount <= 0 || amount > bal);
         }
+
+        return amount;
+    }
+
+    static double topUp(){
+        double amount;
+
+        do{
+            System.out.print("\nEnter amount you want to top-up: ");
+            amount = input.nextDouble();
+            input.nextLine();
+
+            if (amount <= 0){
+                System.out.println("You cannot top-up less than P0");
+            }
+        } while (amount <= 0);
 
         return amount;
     }
