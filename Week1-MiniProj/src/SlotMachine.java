@@ -4,6 +4,7 @@ public class SlotMachine {
     static Scanner input = new Scanner(System.in);
     
     public static void main(String[] args){
+        Player player = new Player();
         MoneyOptions money = new MoneyOptions();
         Slot slot = new Slot();
 
@@ -24,31 +25,33 @@ public class SlotMachine {
                 input.nextLine();
 
                 switch(menuChoice){
-                case 1: if(bal <= 0){
+                case 1: if(player.getBal() <= 0){
                             System.out.println("\nINSUFFICIENT BALANCE. TOP-UP FIRST TO ABLE TO PLAY");
                         } else {
-                            bal = playGame(bal, slot);
+                            playGame(player, slot);
                         }
                         break;
-                case 2: bal += money.topUp();
-                        System.out.println("\nBalance: " + bal);
+                case 2: double topUp = money.topUp();
+                        player.addBal(topUp);
+                        System.out.println("\nBalance: " + player.getBal());
                         break;
-                case 3: bal -= money.withdraw(bal);
-                        System.out.println("\nBalance: " + bal);
+                case 3: double amount = money.withdraw(player);
+                        player.withdraw(amount);
+                        System.out.println("\nBalance: " + player.getBal());
                         break;
-                case 4: System.out.println("\nBalance: " + bal);
+                case 4: System.out.println("\nBalance: " + player.getBal());
                         break;
-                case 5: System.out.println("Thank you for playing the game.");
+                case 5: System.out.println("\nThank you for playing the game.");
                         isRunning = false;
                         break;
-                default: System.out.println("Invalid Input. Choose from Menu Options only.");
+                default: System.out.println("\nInvalid Input. Choose from Menu Options only.");
                 }
             } while (menuChoice < 1 || menuChoice > 5);
         }
         input.close();
     }
 
-    static double playGame(double bal, Slot slot){
+    static void playGame(Player player, Slot slot){
         String[] slots;
         double bet;
         double payout;
@@ -69,29 +72,29 @@ public class SlotMachine {
                 bet = input.nextDouble();
                 input.nextLine();
 
-                if (bet > bal){
+                if (bet > player.getBal()){
                     System.out.println("INSUFFICIENT BALANCE");
-                } else if(bal <= 0){
+                } else if(player.getBal() == 0){
                     System.out.println("YOU CURRENTLY HAVE 0 BALANCE");
                 }
-            } while (bet > bal);
+            } while (bet > player.getBal());
 
-            bal -= bet;
+            player.withdraw(bet);
                 
             System.out.println("\nSpinning...");
             slots = slot.roll();
             slot.print(slots);
 
             payout = slot.result(slots, bet);
-            bal += payout;
+            player.addBal(payout);
             
             if (payout > 0){
                 System.out.println("You won P" + payout);
             }
 
-            System.out.println("\nBalance: P" + bal);
+            System.out.println("\nBalance: P" + player.getBal());
 
-            if (bal <= 0){
+            if (player.getBal() <= 0){
                 System.out.println("\nINSUFFICIENT BALANCE, TOP-UP TO BE ABLE TO PLAY AGAIN");
                 playing = false;
             } else {
@@ -108,10 +111,7 @@ public class SlotMachine {
                     }
                 } while (!playAgain.equals("yes") && !playAgain.equals("no"));
             } 
-                
-        } 
-
-        return bal;
+        }
     }
 }
 //magday

@@ -19,10 +19,10 @@ public class MoneyOptions {
         return amount;
     }
 
-    double withdraw(double bal){
+    double withdraw(Player player){
         double amount;
         
-        if (bal == 0){
+        if (player.getBal() == 0){
             System.out.println("\nNO BALANCE. UNABLE TO WITHDRAW");
             return 0;
         } else {
@@ -33,15 +33,14 @@ public class MoneyOptions {
 
                 if (amount <= 0){
                     System.out.println("You cannot withdraw less than P0");
-                } else if (amount > bal){
+                } else if (amount > player.getBal()){
                     System.out.println("You cannot withdraw more than your balance");
                 } else {
-                    return amount;
+                    player.withdraw(amount);
                 }
 
                 if(!retryWithdraw()){
                     System.out.println("Withdrawal cancelled.");
-                    return 0;
                 }
             }
         }
