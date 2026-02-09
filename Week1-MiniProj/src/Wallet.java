@@ -1,9 +1,9 @@
 import java.util.Scanner;
 
-public class MoneyOptions {
+public class Wallet {
     Scanner input = new Scanner(System.in);
 
-    double topUp(){
+    public void topUp(Player player){
         double amount;
 
         do{
@@ -16,15 +16,14 @@ public class MoneyOptions {
             }
         } while (amount <= 0);
 
-        return amount;
+        player.addBal(amount);
     }
 
-    double withdraw(Player player){
+    public void withdraw(Player player){
         double amount;
         
         if (player.getBal() == 0){
             System.out.println("\nNO BALANCE. UNABLE TO WITHDRAW");
-            return 0;
         } else {
             while(true){
                 System.out.print("\nEnter amount you want to withdraw: ");
@@ -41,12 +40,13 @@ public class MoneyOptions {
 
                 if(!retryWithdraw()){
                     System.out.println("Withdrawal cancelled.");
+                    return;
                 }
             }
         }
     }
 
-    boolean retryWithdraw(){
+    private boolean retryWithdraw(){
         String again;
         boolean running = true;
 

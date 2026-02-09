@@ -4,13 +4,14 @@ public class SlotMachine {
     static Scanner input = new Scanner(System.in);
     
     public static void main(String[] args){
-        Player player = new Player();
-        MoneyOptions money = new MoneyOptions();
+        String user;
+        String pass;
+        Player player = new Player(user, pass);
+        Wallet wallet = new Wallet();
         Slot slot = new Slot();
 
         int menuChoice;
         boolean isRunning = true;
-        double bal = 0;
 
         while (isRunning){
             do {
@@ -31,12 +32,10 @@ public class SlotMachine {
                             playGame(player, slot);
                         }
                         break;
-                case 2: double topUp = money.topUp();
-                        player.addBal(topUp);
+                case 2: wallet.topUp(player);
                         System.out.println("\nBalance: " + player.getBal());
                         break;
-                case 3: double amount = money.withdraw(player);
-                        player.withdraw(amount);
+                case 3: wallet.withdraw(player);
                         System.out.println("\nBalance: " + player.getBal());
                         break;
                 case 4: System.out.println("\nBalance: " + player.getBal());
@@ -76,8 +75,10 @@ public class SlotMachine {
                     System.out.println("INSUFFICIENT BALANCE");
                 } else if(player.getBal() == 0){
                     System.out.println("YOU CURRENTLY HAVE 0 BALANCE");
+                } else if(bet <= 0){
+                    System.out.println("YOU CANNOT BET LESS THAN OR EQUAL TO ZERO");
                 }
-            } while (bet > player.getBal());
+            } while (bet <= 0 || bet > player.getBal());
 
             player.withdraw(bet);
                 
