@@ -4,46 +4,73 @@ public class SlotMachine {
     static Scanner input = new Scanner(System.in);
     
     public static void main(String[] args){
+        Player player = new Player();
+        int homeChoice;
         String user;
         String pass;
-        Player player = new Player(user, pass);
+        boolean isLoggedIn = false;
+        
+        System.out.println("------HOME------");
+        System.out.println("1. Login");
+        System.out.println("2. Register");
+        System.out.println("3. Exit");
+        homeChoice = input.nextInt();
+        input.nextLine();
+
+        switch (homeChoice) {
+            case 1:
+                player.login();
+                break;
+            case 2:
+                player.register();
+                break;
+            default: System.out.println("\nInvalid Input. Choose from Menu Options only.");
+                break;
+        }
+
         Wallet wallet = new Wallet();
         Slot slot = new Slot();
 
         int menuChoice;
-        boolean isRunning = true;
 
-        while (isRunning){
+        while (isLoggedIn){
             do {
                 System.out.println("\n-------SLOT MACHINE GAME MENU-------");
                 System.out.println("1. Play");
                 System.out.println("2. Top-up");
                 System.out.println("3. Withdraw");
                 System.out.println("4. Check Balance");
-                System.out.println("5. Exit");
+                System.out.println("5. Logout");
                 System.out.print("Menu Choice: ");
                 menuChoice = input.nextInt();
                 input.nextLine();
 
                 switch(menuChoice){
-                case 1: if(player.getBal() <= 0){
-                            System.out.println("\nINSUFFICIENT BALANCE. TOP-UP FIRST TO ABLE TO PLAY");
-                        } else {
-                            playGame(player, slot);
-                        }
-                        break;
-                case 2: wallet.topUp(player);
-                        System.out.println("\nBalance: " + player.getBal());
-                        break;
-                case 3: wallet.withdraw(player);
-                        System.out.println("\nBalance: " + player.getBal());
-                        break;
-                case 4: System.out.println("\nBalance: " + player.getBal());
-                        break;
-                case 5: System.out.println("\nThank you for playing the game.");
-                        isRunning = false;
-                        break;
-                default: System.out.println("\nInvalid Input. Choose from Menu Options only.");
+                case 1: 
+                    if(player.getBal() <= 0){
+                        System.out.println("\nINSUFFICIENT BALANCE. TOP-UP FIRST TO ABLE TO PLAY");
+                    } else {
+                        playGame(player, slot);
+                    }
+                    break;
+                case 2: 
+                    wallet.topUp(player);
+                    System.out.println("\nBalance: " + player.getBal());
+                    break;
+                case 3: 
+                    wallet.withdraw(player);
+                    System.out.println("\nBalance: " + player.getBal());
+                    break;
+                case 4: 
+                    System.out.println("\nBalance: " + player.getBal());
+                    break;
+                case 5: 
+                    System.out.println("\nThank you for playing the game.");
+                    isLoggedIn = false;
+                    break;
+                default: 
+                    System.out.println("\nInvalid Input. Choose from Menu Options only.");
+                    break;
                 }
             } while (menuChoice < 1 || menuChoice > 5);
         }

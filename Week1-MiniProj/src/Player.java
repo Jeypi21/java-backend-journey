@@ -7,18 +7,38 @@ public class Player {
     private String user;
     private String pass;
         
-    Player(String user, String pass){
-        this.user = user;
-        this.pass = pass;
+    Player(String inputUser, String inputPass){
+        this.user = inputUser;
+        this.pass = inputPass;
     }
 
-    public void register(){
-            
+    public boolean register(){
+        System.out.print("\nEnter username: ");
+        user = input.nextLine();
+
+        System.out.print("\nEnter password: ");
+        pass = input.nextLine();
+
+        if(user.isEmpty()){
+            System.out.println("Input Username");
+        }
+
+        if(pass.isEmpty()){
+            System.out.println("Input Password");
+        }
+
+        return true;
     }
 
-    public void login(){
+    public boolean login(){
             
+        return true;
     }
+
+    public void logout(){
+
+    }
+
 
     public double getBal(){
         return bal;
