@@ -2,32 +2,48 @@ import java.util.Scanner;
 
 public class SlotMachine {
     static Scanner input = new Scanner(System.in);
-    
-    public static void main(String[] args){
-        Player player = new Player();
-        int homeChoice;
-        String user;
-        String pass;
-        boolean isLoggedIn = false;
-        
-        System.out.println("------HOME------");
-        System.out.println("1. Login");
-        System.out.println("2. Register");
-        System.out.println("3. Exit");
-        homeChoice = input.nextInt();
-        input.nextLine();
+    static Player player = new Player();
 
-        switch (homeChoice) {
-            case 1:
-                player.login();
-                break;
-            case 2:
-                player.register();
-                break;
-            default: System.out.println("\nInvalid Input. Choose from Menu Options only.");
-                break;
+    public static void main(String[] args){
+        int homeChoice;
+        boolean isLoggedIn = false;
+        boolean exit = false;
+        
+        while(!isLoggedIn && !exit){
+            do {
+                System.out.println("------HOME------");
+                System.out.println("1. Login");
+                System.out.println("2. Register");
+                System.out.println("3. Exit");
+                System.out.print("Choose: ");
+                homeChoice = input.nextInt();
+                input.nextLine();
+
+                switch (homeChoice) {
+                    case 1:
+                        isLoggedIn = player.login();
+                        break;
+                    case 2:
+                        player.register();
+                        break;
+                    case 3:
+                        System.out.println("Thank you. Come again.");
+                        exit = true;
+                        break;
+                    default: System.out.println("\nInvalid Input. Choose from Menu Options only.");
+                        break;
+                }
+            } while (homeChoice < 1 || homeChoice > 3);
         }
 
+        if (isLoggedIn) {
+            gameOptions(isLoggedIn);
+        }
+
+        input.close();
+    }
+
+    static void gameOptions(boolean isLoggedIn){
         Wallet wallet = new Wallet();
         Slot slot = new Slot();
 
@@ -35,7 +51,7 @@ public class SlotMachine {
 
         while (isLoggedIn){
             do {
-                System.out.println("\n-------SLOT MACHINE GAME MENU-------");
+                System.out.println("-------SLOT MACHINE GAME MENU-------");
                 System.out.println("1. Play");
                 System.out.println("2. Top-up");
                 System.out.println("3. Withdraw");
@@ -74,7 +90,6 @@ public class SlotMachine {
                 }
             } while (menuChoice < 1 || menuChoice > 5);
         }
-        input.close();
     }
 
     static void playGame(Player player, Slot slot){
