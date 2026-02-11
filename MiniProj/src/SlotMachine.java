@@ -51,7 +51,7 @@ public class SlotMachine {
 
         while (auth.isLoggedIn()){
             do {
-                System.out.println("-------SLOT MACHINE GAME MENU-------");
+                System.out.println("\n-------SLOT MACHINE GAME MENU-------");
                 System.out.println("1. Play");
                 System.out.println("2. Top-up");
                 System.out.println("3. Withdraw");
