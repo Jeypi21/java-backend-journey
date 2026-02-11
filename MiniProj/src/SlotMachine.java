@@ -2,14 +2,13 @@ import java.util.Scanner;
 
 public class SlotMachine {
     static Scanner input = new Scanner(System.in);
-    static Player player = new Player();
+    static UserManager auth = new UserManager();
 
     public static void main(String[] args){
         int homeChoice;
-        boolean isLoggedIn = false;
         boolean exit = false;
         
-        while(!isLoggedIn && !exit){
+        while(!exit){
             do {
                 System.out.println("------HOME------");
                 System.out.println("1. Login");
@@ -21,10 +20,10 @@ public class SlotMachine {
 
                 switch (homeChoice) {
                     case 1:
-                        isLoggedIn = player.login();
+                        auth.login();
                         break;
                     case 2:
-                        player.register();
+                        auth.register();
                         break;
                     case 3:
                         System.out.println("Thank you. Come again.");
@@ -34,22 +33,23 @@ public class SlotMachine {
                         break;
                 }
             } while (homeChoice < 1 || homeChoice > 3);
-        }
 
-        if (isLoggedIn) {
-            gameOptions(isLoggedIn);
+            if (auth.isLoggedIn()) {
+                gameOptions(auth);
+            }
         }
 
         input.close();
     }
 
-    static void gameOptions(boolean isLoggedIn){
+    static void gameOptions(UserManager auth){
+        Player player = auth.getCurrentPlayer();
         Wallet wallet = new Wallet();
         Slot slot = new Slot();
 
         int menuChoice;
 
-        while (isLoggedIn){
+        while (auth.isLoggedIn()){
             do {
                 System.out.println("-------SLOT MACHINE GAME MENU-------");
                 System.out.println("1. Play");
@@ -81,8 +81,7 @@ public class SlotMachine {
                     System.out.println("\nBalance: " + player.getBal());
                     break;
                 case 5: 
-                    System.out.println("\nThank you for playing the game.");
-                    isLoggedIn = false;
+                    auth.logout();
                     break;
                 default: 
                     System.out.println("\nInvalid Input. Choose from Menu Options only.");
