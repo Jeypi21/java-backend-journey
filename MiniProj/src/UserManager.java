@@ -68,6 +68,7 @@ public class UserManager {
 
             if (inputUser.isEmpty()|| inputPass.isEmpty()){
                 System.out.println("\nInput account details.");
+                continue;
             }
 
             if (users.isEmpty()){
@@ -86,13 +87,14 @@ public class UserManager {
                         return;
                     } else {
                         attempts++;
-                        System.out.printf("\nInvalid Credentials.\nYou have %d attempts left", (maxAttempts - attempts));
+                        System.out.printf("\nInvalid Credentials.\nYou have %d attempts left\n", (maxAttempts - attempts));
                     }
+                    break;
                 }
 
                 if (!foundUser){
                     attempts++;
-                    System.out.printf("\nInvalid Credentials.\nYou have %d attempts left", (maxAttempts - attempts));
+                    System.out.printf("\nInvalid Credentials.\nYou have %d attempts left\n", (maxAttempts - attempts));
                 }
             }
         }
