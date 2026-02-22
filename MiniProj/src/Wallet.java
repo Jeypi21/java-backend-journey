@@ -1,26 +1,38 @@
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Wallet {
     Scanner input = new Scanner(System.in);
 
     public void topUp(Player player){
         double amount;
+        boolean doneTopUp = false;
 
-        do {
+        while (!doneTopUp) {
             System.out.println("\n--------------------");
             System.out.println("       TOP-UP");
             System.out.println("--------------------");
             System.out.print("Enter amount you wanted to top-up: ");
-            amount = input.nextDouble();
-            input.nextLine();
+            
+            try{
+                amount = input.nextDouble();
+                input.nextLine();
+            }
+
+            catch(InputMismatchException error){
+                System.out.println("\nInvalid Input. Input numbers only"); 
+                input.nextLine();
+                continue;
+            }
 
             if (amount <= 0){
                 System.out.println("\nTop-up ammount cannot be less than P1.");
             } else {
                 player.addAmount(amount);
                 System.out.printf("Balance: %.2f\n\n", player.getBal());
+                doneTopUp = true;
             } 
-        } while (amount <= 0);
+        }
     }
 
     public void withdraw(Player player){
@@ -36,8 +48,17 @@ public class Wallet {
                 System.out.println("      WITHDRAW");
                 System.out.println("--------------------");
                 System.out.print("Enter amount you wanted to withdraw: ");
-                amount = input.nextDouble();
-                input.nextLine();
+                
+                try{
+                    amount = input.nextDouble();
+                    input.nextLine();
+                }
+
+                catch(InputMismatchException error){
+                    System.out.println("\nInvalid Input. Input numbers only"); 
+                    input.nextLine();
+                    continue;
+                }
 
                 if (amount > player.getBal()){
                     System.out.println("\nInsufficient funds.\n");
