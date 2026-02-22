@@ -45,12 +45,10 @@ public class SlotMachine {
     }
 
     static void playOptions(UserManager auth) {
-        Player wallet = auth.getCurrentPlayer();
+        Player player = auth.getCurrentPlayer();
+        Wallet wallet = new Wallet();
         int choose;
-        double amount = 0;
         boolean loggedOut = false;
-        String withdrawAgain;
-        boolean withdrawing = true;
 
         System.out.println("\n----------------------------------");
         System.out.println("   Welcome to Slot Machine Game   ");
@@ -67,70 +65,20 @@ public class SlotMachine {
 
             switch (choose){
                 case 1:
-                    if (wallet.getBal() <= 0){
+                    if (player.getBal() <= 0){
                         System.out.println("\nNo balance. Top-up to play the game.\n");
                     } else {
-                        playSlotMachine(slot, wallet);
+                        playSlotMachine(slot, player);
                     }
                     break;
                 case 2:
-                    do {
-                        System.out.println("\n--------------------");
-                        System.out.println("       TOP-UP");
-                        System.out.println("--------------------");
-                        System.out.print("Enter amount you wanted to top-up: ");
-                        amount = input.nextDouble();
-                        input.nextLine();
-
-                        if (amount <= 0){
-                            System.out.println("\nTop-up ammount cannot be less than P1.");
-                        } else {
-                            wallet.addAmount(amount);
-                            System.out.printf("Balance: %.2f\n\n", wallet.getBal());
-                        } 
-                    } while (amount <= 0);
-                       
+                    wallet.topUp(player);
                     break;
                 case 3:
-                    if (wallet.getBal() <= 0){
-                        System.out.println("\nNo balance to withdraw.\n");
-                    } else {
-                        while (withdrawing){
-                            System.out.println("\n--------------------");
-                            System.out.println("      WITHDRAW");
-                            System.out.println("--------------------");
-                            System.out.print("Enter amount you wanted to withdraw: ");
-                            amount = input.nextDouble();
-                            input.nextLine();
-
-                            if (amount > wallet.getBal()){
-                                System.out.println("\nInsufficient funds.\n");
-                                System.out.print("Retry withdraw?(yes/no): ");
-                                withdrawAgain = input.nextLine().toLowerCase();
-
-                                if (withdrawAgain.equals("no")){
-                                    System.out.println("\nGoing back to menu.\n");
-                                    withdrawing = false;
-                                }
-                            } else if (amount <= 0){
-                                System.out.println("\nWithdraw ammount cannot be negative.");
-                                System.out.print("Retry withdraw?(yes/no): ");
-                                withdrawAgain = input.nextLine().toLowerCase();
-
-                                if (withdrawAgain.equals("no")){
-                                    System.out.println("\nGoing back to menu.");
-                                    withdrawing = false;
-                                }
-                            } else {
-                                wallet.reduceAmount(amount);
-                                System.out.printf("Balance: %.2f\n\n", wallet.getBal());
-                                withdrawing = false;
-                            }
-                        }
-                    }   
+                    wallet.withdraw(player);
                     break;
                 case 4:
-                    System.out.printf("\nBalance: %.2f\n\n", wallet.getBal());  
+                    System.out.printf("\nBalance: %.2f\n\n", player.getBal());  
                     break;
                 case 5:
                     System.out.println("\nLogged out.");
@@ -144,7 +92,7 @@ public class SlotMachine {
         } while (!loggedOut);
     }
 
-    public static void playSlotMachine(Slot slot, Player wallet) {
+    public static void playSlotMachine(Slot slot, Player player) {
         String playAgain;
 
         System.err.println("\n-------------Rules-------------");
@@ -163,25 +111,25 @@ public class SlotMachine {
         double earnings = 0;
 
         while(true){
-            if (wallet.getBal() <= 0){
+            if (player.getBal() <= 0){
                 System.out.println("You do not have balance. Top-up to play the game again.\n");
                 break;
             }
 
             do {
-                System.out.printf("\nBalance: %.2f\n\n", wallet.getBal());
+                System.out.printf("\nBalance: %.2f\n\n", player.getBal());
                 System.out.print("Enter your bet: ");
                 bet = input.nextDouble();
                 input.nextLine();
 
-                if (bet > wallet.getBal()){
+                if (bet > player.getBal()){
                     System.out.println("\nInsufficient balance.\n");
                 } else if (bet <= 0){
                     System.out.println("\nBet cannot be less than P1.\n");
                 }
-            } while (bet > wallet.getBal() || bet <= 0);
+            } while (bet > player.getBal() || bet <= 0);
 
-            wallet.reduceAmount(bet); //minus the bet to the current balance
+            player.reduceAmount(bet); //minus the bet to the current balance
 
             System.out.println("\nSpinning...\n");
             slots = slot.roll();
@@ -190,13 +138,13 @@ public class SlotMachine {
             earnings = slot.result(slots, bet);
 
             if (earnings != 0){
-                wallet.addAmount(earnings);
+                player.addAmount(earnings);
                 System.out.printf("\n===YOU WON! P%.2f===\n", earnings);
             }
             
-            System.out.printf("\nBalance: %.2f\n\n", wallet.getBal());    
+            System.out.printf("\nBalance: %.2f\n\n", player.getBal());    
             
-            if (wallet.getBal() > 0){
+            if (player.getBal() > 0){
                 System.out.print("Play again?(yes/no): ");
                 playAgain = input.nextLine().toLowerCase();
 
