@@ -1,32 +1,32 @@
 public class Player {
     private double bal = 0;
-    private String username;
-    private String password;
+    private String user;
+    private String pass;
 
-    public Player(String username, String password){
-        this.username = username;
-        this.password = password;
-    }
-
-    public String getUsername(){
-        return username;
-    }
-
-    public boolean checkPassword(String inputPass){
-        return password.equals(inputPass);
+    Player(String username, String password){
+        this.user = username;
+        this.pass = password;
     }
 
     public double getBal(){
         return bal;
     }
 
-    public void addBal(double amount){
+    public void addAmount(double amount){
         bal += amount;
     }
 
-    public boolean withdraw(double amount){
-        if (amount > bal) return false;
+    public boolean reduceAmount(double amount){
+        if (amount > bal || amount <= 0) return false;
         bal -= amount;
         return true;
+    }
+
+    public String getUsername(){
+        return user;
+    }
+
+    public boolean passwordCorrect(String inputPass){
+        return inputPass.equals(pass);
     }
 }

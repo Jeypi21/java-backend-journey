@@ -1,28 +1,34 @@
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class UserManager {
-    private Scanner input = new Scanner(System.in);
-    private ArrayList<Player> users = new ArrayList<>();
-    private Player currentPlayer = null;
+    Scanner input = new Scanner(System.in);
+    ArrayList<Player> users = new ArrayList<>();
+    Player currentPlayer = null;
 
     public boolean register(){
-        while(true){
-            System.out.println("-----------------");
+        String newUser;
+        String newPass;
+
+        System.out.println("\n------------------------------");
+        System.out.println("           Register");
+        while (true){
+            System.out.println("------------------------------");
             System.out.print("Enter username: ");
-            String newUser = input.nextLine();
+            newUser = input.nextLine();
 
-            System.out.print("Enter password: ");
-            String newPass = input.nextLine();
+            System.out.print("Enter password (maximum of 12 characters only): ");
+            newPass = input.nextLine();
 
-            if(newUser.isEmpty() || newPass.isEmpty()){
-                System.out.println("Username and Password cannot be empty.\n");
+            if (newUser.isEmpty() || newPass.isEmpty()){
+                System.out.println("\nInput account details.");
+                System.out.println("----------------------------");
                 continue;
-            }   
-            
-            boolean userTaken = false;
+            }
 
-            for (Player p : users){
+            boolean userTaken = false;  
+            
+            for(Player p : users){
                 if (p.getUsername().equals(newUser)){
                     userTaken = true;
                     break;
@@ -30,82 +36,84 @@ public class UserManager {
             }
 
             if (userTaken){
-                System.out.println("\nUsername already taken.\n");
-                continue;
+                System.out.println("\nUsername is already taken");
+                System.out.println("----------------------------");
+                return false;
             }
 
             Player newPlayer = new Player(newUser, newPass);
             users.add(newPlayer);
-
-            System.out.println("\nRegistration successful!\n");
+            System.out.println("\nRegistration Complete.");
+            System.out.println("----------------------------");
             return true;
         }
     }
 
     public void login(){
-        if (users.isEmpty()){
-            System.out.println("\nNo users found. Please register first.\n");
-            return;
-        }
-
+        String inputUser;
+        String inputPass;
         int attempts = 0;
         int maxAttempts = 3;
 
-        while (attempts < maxAttempts){
+        System.out.println("\n------------------------------");
+        System.out.println("             Login");
+        while (attempts < maxAttempts) {
             boolean foundUser = false;
-
-            System.out.println("-----------------");
-            if ((maxAttempts - attempts) == 1){
-                System.out.println("\nType exit if you want to cancel login\n");
-            }
+            System.out.println("------------------------------");
             System.out.print("Enter username: ");
-            String inputUser = input.nextLine();
-
-            if (inputUser.equalsIgnoreCase("exit")){
-                System.out.println("\nExiting...\n");
-                return;
-            }
+            inputUser = input.nextLine();
 
             System.out.print("Enter password: ");
-            String inputPass = input.nextLine();
+            inputPass = input.nextLine();
+
+            if (inputUser.isEmpty()|| inputPass.isEmpty()){
+                System.out.println("\nInput account details.");
+            }
+
+            if (users.isEmpty()){
+                System.out.println("\nAccount information not found. Register if you do not have an account.");
+                break;
+            }
 
             for(Player p : users){
                 if (p.getUsername().equals(inputUser)){
                     foundUser = true;
 
-                    if (p.checkPassword(inputPass)){
+                    if (p.passwordCorrect(inputPass)){
                         currentPlayer = p;
-                        System.out.println("\nLogin Successful.\n");
+                        System.out.println("\nLogin Successful.");
+                        System.out.println("----------------------------");
                         return;
                     } else {
                         attempts++;
-                        System.out.println("\nUsername or Password is incorrect.\n");
-                        System.out.println("Remaining attempts: " + (maxAttempts - attempts));
+                        System.out.printf("\nInvalid Credentials.\nYou have %d attempts left", (maxAttempts - attempts));
                     }
-                    break;
                 }
-            }
 
-            if(!foundUser){
-                attempts++;
-                System.out.println("\nInvalid username or password.\n");
-                System.out.println("Remaining attempts: " + (maxAttempts - attempts));
+                if (!foundUser){
+                    attempts++;
+                    System.out.printf("\nInvalid Credentials.\nYou have %d attempts left", (maxAttempts - attempts));
+                }
             }
         }
 
-        System.out.println("\nToo many failed attempts\n");
-    }
-
-    public void logout(){
-        currentPlayer = null;
-        System.out.println("\nLogged out.\n");
+        if (!users.isEmpty()){
+            System.out.println("\nYou've reached the maximum attempts to login.");
+        }
+        System.out.println("----------------------------");
     }
 
     public Player getCurrentPlayer(){
-        return currentPlayer;
+        return currentPlayer; 
     }
 
     public boolean isLoggedIn(){
-        return currentPlayer != null;
+        if(currentPlayer != null) return true;
+        
+        return false;
+    }
+
+    public void loggedOut(){
+        currentPlayer = null;
     }
 }
