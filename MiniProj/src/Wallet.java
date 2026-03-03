@@ -4,7 +4,7 @@ import java.util.InputMismatchException;
 public class Wallet {
     Scanner input = new Scanner(System.in);
 
-    public void topUp(Player player){
+    public void topUp(Player player, UserManager auth){
         double amount;
         boolean doneTopUp = false;
 
@@ -31,11 +31,12 @@ public class Wallet {
                 player.addAmount(amount);
                 System.out.printf("Balance: %.2f\n\n", player.getBal());
                 doneTopUp = true;
+                auth.saveAllUsersToFile();
             } 
         }
     }
 
-    public void withdraw(Player player){
+    public void withdraw(Player player, UserManager auth){
         double amount;
         String withdrawAgain;
         boolean withdrawing = true;
@@ -81,6 +82,7 @@ public class Wallet {
                 } else {
                     player.reduceAmount(amount);
                     System.out.printf("Balance: %.2f\n\n", player.getBal());
+                    auth.saveAllUsersToFile();
                     withdrawing = false;
                 }
             }

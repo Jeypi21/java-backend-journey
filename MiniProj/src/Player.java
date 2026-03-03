@@ -3,9 +3,10 @@ public class Player {
     private String user;
     private String pass;
 
-    Player(String username, String password){
+    Player(String username, String password, double balance){
         this.user = username;
         this.pass = password;
+        this.bal = balance;
     }
 
     public double getBal(){
@@ -26,7 +27,15 @@ public class Player {
         return user;
     }
 
+    public String getPassword(){
+        return pass;
+    }
+
     public boolean passwordCorrect(String inputPass){
         return inputPass.equals(pass);
+    }
+
+    public String fileRecord() {
+        return user + "," + pass + "," + bal;
     }
 }

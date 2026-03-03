@@ -1,14 +1,26 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class UserManager {
     Scanner input = new Scanner(System.in);
     ArrayList<Player> users = new ArrayList<>();
     Player currentPlayer = null;
 
+    private String filePath = "C:\\Users\\John Paul\\OneDrive\\Desktop\\Java Program\\MiniProj\\src\\users.txt";
+
+    public UserManager(){
+        loadUsersFromFile();
+    }
+
     public boolean register(){
         String newUser;
         String newPass;
+        double bal = 0;
 
         System.out.println("\n------------------------------");
         System.out.println("           Register");
@@ -22,7 +34,11 @@ public class UserManager {
 
             if (newUser.isEmpty() || newPass.isEmpty()){
                 System.out.println("\nInput account details.");
-                System.out.println("----------------------------");
+                continue;
+            }
+
+            if (newPass.length() > 12){
+                System.out.println("\nPassword must not exceed 12 characters.");
                 continue;
             }
 
@@ -36,16 +52,61 @@ public class UserManager {
             }
 
             if (userTaken){
-                System.out.println("\nUsername is already taken");
-                System.out.println("----------------------------");
+                System.out.println("\nAccount information is already registered.");
+                System.out.println("------------------------------");
                 return false;
             }
 
-            Player newPlayer = new Player(newUser, newPass);
+            Player newPlayer = new Player(newUser, newPass, bal);
             users.add(newPlayer);
+
+            try(FileWriter writer = new FileWriter(filePath, true)){
+                writer.write(newUser + "," + newPass + "," + bal + System.lineSeparator());
+            }
+            catch(IOException e){
+                System.out.println("\nCould not write file.");
+            }
             System.out.println("\nRegistration Complete.");
-            System.out.println("----------------------------");
+            System.out.println("------------------------------");
             return true;
+        }
+    }
+
+    public void saveAllUsersToFile(){
+        try (FileWriter writer = new FileWriter(filePath, false)) {
+            for (Player p : users) {
+                writer.write(p.fileRecord() + System.lineSeparator());
+            }
+        } catch (FileNotFoundException e) {
+            // first run: file doesn't exist yet, ok
+        } catch (IOException e) {
+            System.out.println("Could not read users file.");
+        }
+    }
+
+    public void loadUsersFromFile(){
+        users.clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                String[] parts = line.split(",", 3);
+                if (parts.length < 3) continue;
+
+                String username = parts[0].trim();
+                String password = parts[1].trim();
+                double bal = Double.parseDouble(parts[2].trim());
+
+                users.add(new Player(username, password, bal));
+            }
+        } catch (FileNotFoundException e) {
+            // first run: file doesn't exist yet, ok
+        } catch (IOException e) {
+            System.out.println("Could not read users file.");
         }
     }
 
@@ -91,11 +152,11 @@ public class UserManager {
                     }
                     break;
                 }
+            }
 
-                if (!foundUser){
-                    attempts++;
-                    System.out.printf("\nInvalid Credentials.\nYou have %d attempts left\n", (maxAttempts - attempts));
-                }
+            if (!foundUser){
+                attempts++;
+                System.out.printf("\nInvalid Credentials.\nYou have %d attempts left\n", (maxAttempts - attempts));
             }
         }
 
@@ -116,6 +177,7 @@ public class UserManager {
     }
 
     public void loggedOut(){
+        saveAllUsersToFile();
         currentPlayer = null;
     }
 }

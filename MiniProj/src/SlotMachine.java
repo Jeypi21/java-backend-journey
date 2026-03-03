@@ -100,10 +100,10 @@ public class SlotMachine {
                     else playSlotMachine(slot, player);
                     break;
                 case 2:
-                    wallet.topUp(player);
+                    wallet.topUp(player, auth);
                     break;
                 case 3:
-                    wallet.withdraw(player);
+                    wallet.withdraw(player, auth);
                     break;
                 case 4:
                     System.out.printf("\nBalance: %.2f\n\n", player.getBal());  
@@ -170,7 +170,7 @@ public class SlotMachine {
                 System.out.printf("\n===YOU WON! P%.2f===\n", earnings);
             }
             
-            System.out.printf("\nBalance: %.2f\n\n", player.getBal());    
+            System.out.printf("\nBalance: %.2f\n\n", player.getBal());
             
             if (player.getBal() > 0){
                 System.out.print("Play again?(yes/no): ");
